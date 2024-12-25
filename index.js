@@ -11,6 +11,8 @@ const port = process.env.PORT || 3000;
 
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/api',router);
 app.get("/", (req, res) => {
   if (req.url.endsWith("favicon.ico")) res.send(null);
