@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 import crypto from "crypto";
-
+import { generateToken } from "../services/authentication.js";
 const rolesArray = ["ADMIN", "USER"];
 
 const userSchema = new Schema(
@@ -68,7 +68,7 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-userSchema.static("matchPassword",async function (email, password) {
+userSchema.static("matchPasswordAndGenerateToken",async function (email, password) {
   const user =await this.findOne({ email });
   if (!user) throw new Error("User not found");
   const hashedPassword = user.password;
@@ -82,11 +82,7 @@ userSchema.static("matchPassword",async function (email, password) {
     throw new Error("Incorrect password");
   }
   
-  user.password = undefined;
-  user.salt = undefined;
-
-  console.log('usr',user);
-  return user;
+  return generateToken(user);
 });
 
 const User = model("User", userSchema);
