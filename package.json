@@ -15,6 +15,7 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
