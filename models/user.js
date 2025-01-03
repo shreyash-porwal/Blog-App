@@ -25,7 +25,7 @@ const userSchema = new Schema(
     },
 
     salt: {
-      type: String
+      type: String,
     },
 
     profileImageUrl: {
@@ -51,7 +51,7 @@ userSchema.pre("save", async function (next) {
   try {
     // Generate salt using crypto.randomBytes
     const saltKey = crypto.randomBytes(16).toString("hex");
-    
+
     const hash = crypto
       .createHmac("sha256", saltKey) // Use the salt to hash the password
       .update(user.password)
@@ -68,22 +68,26 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-userSchema.static("matchPasswordAndGenerateToken",async function (email, password) {
-  const user =await this.findOne({ email });
-  if (!user) throw new Error("User not found");
-  const hashedPassword = user.password;
-  const saltKey = user.salt;
+userSchema.static(
+  "matchPasswordAndGenerateToken",
+  async function (email, password) {
+    const user = await this.findOne({ email });
 
-  const userProvidedHash = crypto
-    .createHmac("sha256", saltKey)
-    .update(password)
-    .digest("hex");
-  if (userProvidedHash !== hashedPassword) {
-    throw new Error("Incorrect password");
+    if (!user) throw new Error("User not found");
+    const hashedPassword = user.password;
+    const saltKey = user.salt;
+
+    const userProvidedHash = crypto
+      .createHmac("sha256", saltKey)
+      .update(password)
+      .digest("hex");
+    if (userProvidedHash !== hashedPassword) {
+      throw new Error("Incorrect password");
+    }
+
+    return generateToken(user);
   }
-  
-  return generateToken(user);
-});
+);
 
 const User = model("User", userSchema);
 export default User;
