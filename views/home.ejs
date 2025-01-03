@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('./partials/head') %>
+
+<head>
+  <%- include('./partials/head') %>
     <title>Home Page</title>
-  </head>
-  <body>
-    <%- include('./partials/nav') %>
-    <%= JSON.stringify(user) %>
-    <%- include('./partials/scripts') %>
-  </body>
+</head>
+
+<body>
+  <%- include('./partials/nav') %>
+
+    <% if (locals.user) { %>
+      <%= JSON.stringify(user) %>
+        <% } %>
+
+          <%- include('./partials/scripts') %>
+</body>
+
 </html>

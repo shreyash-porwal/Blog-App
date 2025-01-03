@@ -1,15 +1,14 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config();
 
 export function generateToken(user) {
   try {
     const secret = process.env.SECRET_KEY;
-
+    console.log(user);
     const payload = {
       _id: user._id,
       email: user.email,
       role: user.role,
+      name: user.name,
     };
 
     const token = jwt.sign(payload, secret);
